@@ -17,7 +17,7 @@ public class GodmodeMain extends PluginBase {
         saveResource("config.yml");
 
         getServer().getPluginManager().registerEvents(new GodmodeCommand(), this);
-        getServer().getCommandMap().register("sudo", new GodmodeCommand());
+        getServer().getCommandMap().register("god", new GodmodeCommand());
 
         getLogger().info("§b" + getName() + " §fwas successfully §aEnabled");
     }
