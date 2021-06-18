@@ -1,0 +1,9 @@
+prefix: §8[§4Godmode§8] §r
+setonjoin: false
+messages:
+  ingodself: §aYou are now in godmode
+  outgodself: §cYou are no longer in godmode
+  ingodother: §aYou put§b %target §ain godmode
+  outgodother: §cYou put§b %target §cout of godmode
+  notonline: §cThe Player§b %player §cisn't online
+  nopermission: §cYou don't have Permissions to ran this Command
