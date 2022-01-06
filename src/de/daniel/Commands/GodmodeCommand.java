@@ -97,8 +97,6 @@ public class GodmodeCommand extends Command implements Listener {
 
         Player p = (Player) e.getEntity();
 
-        p.close();
-
         if (!godmodeList.contains(p)) {
             return;
         }
