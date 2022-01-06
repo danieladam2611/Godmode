@@ -4,6 +4,8 @@ import cn.nukkit.Player;
 import cn.nukkit.Server;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParamType;
+import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.Listener;
 import cn.nukkit.event.entity.EntityDamageEvent;
@@ -19,10 +21,15 @@ import java.util.HashMap;
 public class GodmodeCommand extends Command implements Listener {
 
     private static Config cfg = new Config(new File(GodmodeMain.getInstance().getDataFolder(), "config.yml"));
-    private static ArrayList<Player> godmodeMap = new ArrayList<>();
+    private static ArrayList<Player> godmodeList= new ArrayList<>();
 
     public GodmodeCommand() {
         super("god", "Put yourself or another player in godmode", "/god <target>");
+
+        commandParameters.clear();
+        commandParameters.put("default", new CommandParameter[]{
+                new CommandParameter("player", CommandParamType.TARGET, false)
+        });
     }
 
     @Override
@@ -42,13 +49,13 @@ public class GodmodeCommand extends Command implements Listener {
                 return false;
             }
 
-            if (godmodeMap.contains(p)) {
-                godmodeMap.remove(p);
+            if (godmodeList.contains(p)) {
+                godmodeList.remove(p);
                 p.sendMessage(prefix + cfg.getString("messages.outgodself"));
                 return true;
             }
 
-            godmodeMap.add(p);
+            godmodeList.add(p);
             p.sendMessage(prefix + cfg.getString("messages.ingodself"));
             return true;
 
@@ -62,18 +69,18 @@ public class GodmodeCommand extends Command implements Listener {
             Player target = Server.getInstance().getPlayer(args[0]);
 
             if (target == null) {
-                sender.sendMessage(prefix + cfg.getString("messages.notonline").replace("%player", target.getName()));
+                sender.sendMessage(prefix + cfg.getString("messages.notonline").replace("%player", args[0]));
                 return false;
             }
 
-            if (godmodeMap.contains(target)) {
-                godmodeMap.remove(target);
-                target.sendMessage(prefix + cfg.getString("messages.outgodother").replace("%target", target.getName()));
+            if (godmodeList.contains(target)) {
+                godmodeList.remove(target);
+                sender.sendMessage(prefix + cfg.getString("messages.outgodother").replace("%target", target.getName()));
                 return true;
             }
 
-            godmodeMap.add(target);
-            target.sendMessage(prefix + cfg.getString("messages.ingodother").replace("%target", target.getName()));
+            godmodeList.add(target);
+            sender.sendMessage(prefix + cfg.getString("messages.ingodother").replace("%target", target.getName()));
             return true;
 
         } else {
@@ -90,7 +97,9 @@ public class GodmodeCommand extends Command implements Listener {
 
         Player p = (Player) e.getEntity();
 
-        if (!godmodeMap.contains(p)) {
+        p.close();
+
+        if (!godmodeList.contains(p)) {
             return;
         }
 
@@ -103,6 +112,6 @@ public class GodmodeCommand extends Command implements Listener {
             return;
         }
 
-        godmodeMap.add(e.getPlayer());
+        godmodeList.add(e.getPlayer());
     }
 }
